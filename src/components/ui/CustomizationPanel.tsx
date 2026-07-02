@@ -63,6 +63,8 @@ export const CustomizationPanel = () => {
                     primaryColor: theme.colors.primary,
                     secondaryColor: theme.colors.secondary,
                     accentColor: theme.colors.accent,
+                    headingFont: theme.fonts.heading,
+                    bodyFont: theme.fonts.body,
                   });
                 }}
                 className={`p-2.5 rounded-lg border-2 text-left transition-all ${
@@ -82,6 +84,9 @@ export const CustomizationPanel = () => {
                     : 'text-gray-600 dark:text-gray-400'
                 }`}>
                   {theme.name}
+                </span>
+                <span className="block text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">
+                  {theme.fonts.heading} / {theme.fonts.body}
                 </span>
               </button>
             ))}

@@ -19,6 +19,7 @@ export type AccentStyle = 'lines' | 'dots' | 'shapes' | 'borders' | 'circles' | 
 export interface ThemeVariant {
   name: string;
   colors: ColorScheme;
+  fonts: FontPair;
 }
 
 export interface Template {
