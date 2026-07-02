@@ -282,7 +282,7 @@ export const CustomizationPanel = () => {
           Skills Display
         </div>
         <div className="flex gap-2">
-          {(['text', 'bars', 'stars'] as const).map((mode) => (
+          {(['text', 'bars', 'stars', 'circles'] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => updateCustomization({ proficiencyDisplay: mode })}

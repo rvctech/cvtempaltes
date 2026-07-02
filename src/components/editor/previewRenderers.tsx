@@ -28,9 +28,16 @@ const SkillIndicator = ({ skill, pd, color, mutedColor }: any) => {
   if (pd === 'text' || !pd) return <span className="text-xs ml-1" style={{ color: mutedColor }}>({skill.proficiency})</span>;
   const level = levelMap[skill.proficiency] || 1;
   if (pd === 'bars') return (
-    <span className="inline-flex gap-px ml-1.5 align-middle">
+    <span className="ml-1.5" style={{ fontSize: 9, lineHeight: 1 }}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className="w-1.5 h-2.5 rounded-xs" style={{ backgroundColor: i <= level ? color : `${mutedColor}30` }} />
+        <span key={i} style={{ marginRight: 1, color: i <= level ? color : `${mutedColor}30` }}>&#x258C;</span>
+      ))}
+    </span>
+  );
+  if (pd === 'circles') return (
+    <span className="ml-1.5" style={{ fontSize: 8, lineHeight: 1 }}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} style={{ marginRight: 1, color: i <= level ? color : `${mutedColor}30` }}>{i <= level ? '\u25CF' : '\u25CB'}</span>
       ))}
     </span>
   );
@@ -46,12 +53,32 @@ const SkillIndicator = ({ skill, pd, color, mutedColor }: any) => {
 const bg = (isDark: boolean) => isDark ? '#0f172a' : '#ffffff';
 const hdr = (isDark: boolean) => isDark ? '#1e293b' : '#f8fafc';
 
+const accentDivider = (as: string, ac: string) => {
+  switch (as) {
+    case 'dots': return `1px dotted ${ac}40`;
+    case 'borders': return `2px solid ${ac}50`;
+    case 'geometric': return `1px dashed ${ac}50`;
+    default: return `1px solid ${ac}30`;
+  }
+};
+
+const accentBulletChar = (as: string) => {
+  switch (as) {
+    case 'dots': return '\u2022 ';
+    case 'shapes': return '\u25C6 ';
+    case 'circles': return '\u25CF ';
+    case 'geometric': return '\u25B8 ';
+    default: return '';
+  }
+};
+
 /* ─── 8 ATS-Friendly Professional CV Templates ─── */
 
 /* 1. Executive Classic — Traditional serif, centered header, ruled sections */
-const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd, layout }: any) => {
+const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd, layout, as }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
-  const rule = `1px solid ${ac}30`;
+  const bc = accentBulletChar(as);
+  const rule = accentDivider(as, ac);
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
       <div className="px-10 pt-10 pb-6 text-center">
@@ -69,28 +96,28 @@ const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark,
       {layout === 'two-column' ? (
         <div className="flex gap-8 px-10 pb-6 pt-4">
           <div className="flex-1 space-y-1">
-            {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-            {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+            {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
           </div>
           <div className="w-64 shrink-0 space-y-1" style={{ borderLeft: rule, paddingLeft: '2rem' }}>
-            {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-            {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
-            {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-            {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-            {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-            {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+            {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
+            {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+            {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+            {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+            {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
           </div>
         </div>
       ) : (
         <div className="px-10 pb-6 space-y-1 pt-4">
-          {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-          {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
-          {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-          {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-          {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-          {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+          {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
+          {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+          {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+          {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+          {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
         </div>
       )}
     </div>
@@ -98,8 +125,9 @@ const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark,
 };
 
 /* 2. Modern Minimal — Clean sans-serif, left-aligned, accent underline */
-const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd, layout }: any) => {
+const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd, layout, as }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
+  const bc = accentBulletChar(as);
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
       <div className="px-10 pt-10 pb-6">
@@ -117,28 +145,28 @@ const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd
       {layout === 'two-column' ? (
         <div className="flex gap-8 px-10 pb-6">
           <div className="flex-1 space-y-5">
-            {summary && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-            {experience.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {summary && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+            {experience.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
           </div>
-          <div className="w-64 shrink-0 space-y-5" style={{ borderLeft: `1px solid ${ac}30`, paddingLeft: '2rem' }}>
-            {education.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-            {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-            {languages.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-            {certifications.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-            {projects.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-            {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          <div className="w-64 shrink-0 space-y-5" style={{ borderLeft: accentDivider(as, ac), paddingLeft: '2rem' }}>
+            {education.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+            {languages.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+            {certifications.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+            {projects.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+            {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
           </div>
         </div>
       ) : (
         <div className="px-10 pb-6 space-y-5">
-          {summary && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-          {experience.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {education.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-          {languages.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-          {certifications.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-          {projects.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-          {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          {summary && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+          {experience.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {education.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+          {languages.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+          {certifications.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+          {projects.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+          {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
         </div>
       )}
     </div>
@@ -146,8 +174,9 @@ const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd
 };
 
 /* 3. Clean Professional — Warm accent, rounded skill tags, professional */
-const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd, layout }: any) => {
+const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd, layout, as }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
+  const bc = accentBulletChar(as);
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
       <div className="px-10 pt-10 pb-6" style={{ backgroundColor: hdr(isDark) }}>
@@ -164,28 +193,28 @@ const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark,
       {layout === 'two-column' ? (
         <div className="flex gap-8 px-10 pb-6 pt-4">
           <div className="flex-1 space-y-5">
-            {summary && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-            {experience.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {summary && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+            {experience.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
           </div>
-          <div className="w-64 shrink-0 space-y-5" style={{ borderLeft: `1px solid ${pc}20`, paddingLeft: '2rem' }}>
-            {education.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-            {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-            {languages.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-            {certifications.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-            {projects.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-            {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          <div className="w-64 shrink-0 space-y-5" style={{ borderLeft: accentDivider(as, pc), paddingLeft: '2rem' }}>
+            {education.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+            {languages.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+            {certifications.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+            {projects.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+            {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
           </div>
         </div>
       ) : (
         <div className="px-10 pb-6 pt-4 space-y-5">
-          {summary && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-          {experience.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {education.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-          {languages.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-          {certifications.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-          {projects.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-          {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          {summary && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+          {experience.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {education.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+          {languages.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+          {certifications.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+          {projects.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+          {customSections.map((s: any) => <div key={s.id}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
         </div>
       )}
     </div>
@@ -193,8 +222,10 @@ const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark,
 };
 
 /* 4. Corporate Blue — Blue accent, horizontal dividers, professional */
-const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd, layout }: any) => {
+const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd, layout, as }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
+  const bc = accentBulletChar(as);
+  const rule = accentDivider(as, pc);
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
       <div className="h-1" style={{ backgroundColor: pc }} />
@@ -212,28 +243,28 @@ const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd, la
       {layout === 'two-column' ? (
         <div className="flex gap-8 px-10 pb-6">
           <div className="flex-1 space-y-1">
-            {summary && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-            {experience.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+            {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
           </div>
-          <div className="w-64 shrink-0 space-y-1" style={{ borderLeft: `1px solid ${pc}20`, paddingLeft: '2rem' }}>
-            {education.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-            {skills.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-            {languages.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-            {certifications.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-            {projects.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-            {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          <div className="w-64 shrink-0 space-y-1" style={{ borderLeft: rule, paddingLeft: '2rem' }}>
+            {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+            {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+            {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+            {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+            {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+            {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
           </div>
         </div>
       ) : (
         <div className="px-10 pb-6 space-y-1">
-          {summary && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
-          {experience.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {education.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-          {skills.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
-          {languages.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
-          {certifications.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
-          {projects.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
-          {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
+          {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
+          {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>{bc}Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
+          {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
+          {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
+          {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
+          {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
+          {customSections.map((s: any) => <div key={s.id} className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>{bc}{s.title}</h2><p className="text-sm whitespace-pre-wrap" style={{ color: mutedText }}>{s.content}</p></div>)}
         </div>
       )}
     </div>

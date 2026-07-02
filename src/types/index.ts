@@ -159,7 +159,7 @@ export interface CustomizationState {
   theme: 'light' | 'dark';
   accentStyle: AccentStyle;
   selectedThemeIndex: number;
-  proficiencyDisplay: 'text' | 'bars' | 'stars';
+  proficiencyDisplay: 'text' | 'bars' | 'stars' | 'circles';
 }
 
 export interface DocumentState {
