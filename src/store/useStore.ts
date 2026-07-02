@@ -66,6 +66,7 @@ interface State {
   removeParagraph: (id: string) => void;
 
   setSelectedTemplate: (id: string) => void;
+  updateThemeIndex: (index: number) => void;
   updateCustomization: (data: Partial<CustomizationState>) => void;
   setViewMode: (mode: ViewMode) => void;
   undo: () => void;
@@ -152,6 +153,7 @@ const defaultCustomization: CustomizationState = {
   layout: 'single',
   theme: 'dark',
   accentStyle: 'lines',
+  selectedThemeIndex: 0,
 };
 
 export const useStore = create<State>((set) => ({
@@ -332,6 +334,8 @@ export const useStore = create<State>((set) => ({
     })),
 
   setSelectedTemplate: (id) => set({ selectedTemplateId: id }),
+
+  updateThemeIndex: (index) => set((state) => ({ customization: { ...state.customization, selectedThemeIndex: index } })),
 
   updateCustomization: (data) =>
     set((state) => ({ customization: { ...state.customization, ...data } })),

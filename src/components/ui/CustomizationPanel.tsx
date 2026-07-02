@@ -1,6 +1,7 @@
 import { useStore } from '../../store/useStore';
+import { cvTemplates } from '../../data/templates';
 import type { LayoutType, AccentStyle } from '../../types';
-import { Palette, Type, Layout, Sliders, Moon, Sun, Paintbrush } from 'lucide-react';
+import { Palette, Type, Layout, Sliders, Moon, Sun, Paintbrush, Sparkles } from 'lucide-react';
 
 const FONTS = [
   { name: 'Playfair Display', category: 'Serif' },
@@ -37,11 +38,56 @@ const PRESET_COLORS = [
 ];
 
 export const CustomizationPanel = () => {
-  const { customization, updateCustomization } = useStore();
+  const { customization, updateCustomization, updateThemeIndex, selectedTemplateId } = useStore();
+  const currentTemplate = cvTemplates.find((t) => t.id === selectedTemplateId);
+  const templateThemes = currentTemplate?.themes ?? [];
 
   return (
     <div className="space-y-6 p-4 glass-card rounded-xl">
       <h3 className="font-bold text-gray-900 dark:text-white">Customize Template</h3>
+
+      {/* Template Themes */}
+      {templateThemes.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <Sparkles className="w-4 h-4" />
+            {currentTemplate?.name ?? 'Template'} Themes
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {templateThemes.map((theme, i) => (
+              <button
+                key={theme.name}
+                onClick={() => {
+                  updateThemeIndex(i);
+                  updateCustomization({
+                    primaryColor: theme.colors.primary,
+                    secondaryColor: theme.colors.secondary,
+                    accentColor: theme.colors.accent,
+                  });
+                }}
+                className={`p-2.5 rounded-lg border-2 text-left transition-all ${
+                  customization.selectedThemeIndex === i
+                    ? 'border-indigo-500 ring-1 ring-indigo-500/30 bg-indigo-50/50 dark:bg-indigo-500/10'
+                    : 'border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800/30'
+                }`}
+              >
+                <div className="flex gap-1.5 mb-1.5">
+                  <div className="w-4 h-4 rounded-full ring-1 ring-black/10" style={{ backgroundColor: theme.colors.primary }} />
+                  <div className="w-4 h-4 rounded-full ring-1 ring-black/10" style={{ backgroundColor: theme.colors.secondary }} />
+                  <div className="w-4 h-4 rounded-full ring-1 ring-black/10" style={{ backgroundColor: theme.colors.accent }} />
+                </div>
+                <span className={`text-xs font-medium ${
+                  customization.selectedThemeIndex === i
+                    ? 'text-indigo-700 dark:text-indigo-300'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  {theme.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Color Theme */}
       <div className="space-y-3">
@@ -53,13 +99,14 @@ export const CustomizationPanel = () => {
           {PRESET_COLORS.map((preset) => (
             <button
               key={preset.name}
-              onClick={() =>
+              onClick={() => {
                 updateCustomization({
                   primaryColor: preset.primary,
                   secondaryColor: preset.secondary,
                   accentColor: preset.accent,
-                })
-              }
+                });
+                updateThemeIndex(-1);
+              }}
               className={`p-2 rounded-lg border-2 text-left transition-all ${
                 customization.primaryColor === preset.primary
                   ? 'border-indigo-500 glass'
@@ -87,17 +134,17 @@ export const CustomizationPanel = () => {
           <ColorPicker
             label="Primary"
             value={customization.primaryColor}
-            onChange={(v) => updateCustomization({ primaryColor: v })}
+            onChange={(v) => { updateCustomization({ primaryColor: v }); updateThemeIndex(-1); }}
           />
           <ColorPicker
             label="Secondary"
             value={customization.secondaryColor}
-            onChange={(v) => updateCustomization({ secondaryColor: v })}
+            onChange={(v) => { updateCustomization({ secondaryColor: v }); updateThemeIndex(-1); }}
           />
           <ColorPicker
             label="Accent"
             value={customization.accentColor}
-            onChange={(v) => updateCustomization({ accentColor: v })}
+            onChange={(v) => { updateCustomization({ accentColor: v }); updateThemeIndex(-1); }}
           />
         </div>
       </div>

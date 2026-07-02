@@ -7,7 +7,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 const categories = ['All', ...Array.from(new Set(cvTemplates.map((t) => t.category)))];
 
 export const TemplateGallery = () => {
-  const { selectedTemplateId, setSelectedTemplate, setViewMode, updateCustomization } = useStore();
+  const { selectedTemplateId, setSelectedTemplate, setViewMode, updateCustomization, updateThemeIndex } = useStore();
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filtered = activeCategory === 'All'
@@ -16,6 +16,7 @@ export const TemplateGallery = () => {
 
   const applyTemplate = (template: typeof cvTemplates[number]) => {
     setSelectedTemplate(template.id);
+    updateThemeIndex(0);
     updateCustomization({
       primaryColor: template.colors.primary,
       secondaryColor: template.colors.secondary,

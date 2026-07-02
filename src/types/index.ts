@@ -16,11 +16,17 @@ export interface FontPair {
 export type LayoutType = 'single' | 'two-column';
 export type AccentStyle = 'lines' | 'dots' | 'shapes' | 'borders' | 'circles' | 'triangles' | 'geometric';
 
+export interface ThemeVariant {
+  name: string;
+  colors: ColorScheme;
+}
+
 export interface Template {
   id: string;
   name: string;
   description: string;
   colors: ColorScheme;
+  themes: ThemeVariant[];
   fonts: FontPair;
   layout: LayoutType;
   accentStyle: AccentStyle;
@@ -151,6 +157,7 @@ export interface CustomizationState {
   layout: LayoutType;
   theme: 'light' | 'dark';
   accentStyle: AccentStyle;
+  selectedThemeIndex: number;
 }
 
 export interface DocumentState {
