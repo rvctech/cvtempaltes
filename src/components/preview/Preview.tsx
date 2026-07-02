@@ -10,7 +10,7 @@ export const Preview = () => {
   const [activeTab, setActiveTab] = useState<'cv' | 'cover-letter'>('cv');
   const [exporting, setExporting] = useState(false);
   const { cvData, coverLetterData, customization, selectedTemplateId } = useStore();
-  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont, theme } = customization;
+  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont, theme, proficiencyDisplay, layout } = customization;
 
   const handleExportPDF = async (elementId: string, filename: string) => {
     setExporting(true);
@@ -70,9 +70,9 @@ export const Preview = () => {
   const text = isDark ? '#f1f5f9' : '#1a1a1a';
   const mutedText = isDark ? '#94a3b8' : '#6b7280';
 
-  const cvShared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark };
+  const cvShared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: proficiencyDisplay, layout };
   const clTemplateId = getMatchingCoverLetter(selectedTemplateId) || 'modern-minimal-cl';
-  const clShared = { data: coverLetterData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark };
+  const clShared = { data: coverLetterData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: proficiencyDisplay, layout };
 
   const CVRenderer = cvTemplateMap[selectedTemplateId] || cvTemplateMap['modern-minimal-cv'];
   const CLRenderer = clTemplateMap[clTemplateId] || clTemplateMap['modern-minimal-cl'];
