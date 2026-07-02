@@ -154,6 +154,7 @@ const defaultCustomization: CustomizationState = {
   theme: 'dark',
   accentStyle: 'lines',
   selectedThemeIndex: 0,
+  proficiencyDisplay: 'text',
 };
 
 export const useStore = create<State>((set) => ({

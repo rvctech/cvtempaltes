@@ -275,6 +275,29 @@ export const CustomizationPanel = () => {
         </div>
       </div>
 
+      {/* Skills Proficiency Display */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <Type className="w-4 h-4" />
+          Skills Display
+        </div>
+        <div className="flex gap-2">
+          {(['text', 'bars', 'stars'] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => updateCustomization({ proficiencyDisplay: mode })}
+              className={`flex-1 py-2 text-sm rounded-md border-2 capitalize transition-all ${
+                customization.proficiencyDisplay === mode
+                  ? 'border-indigo-500 glass text-indigo-700 dark:text-indigo-400'
+                  : 'border-white/30 dark:border-white/10 glass text-gray-600 dark:text-gray-400 hover:border-white/50 dark:hover:border-white/20'
+              }`}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Theme Toggle */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">

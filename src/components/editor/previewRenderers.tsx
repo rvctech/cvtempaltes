@@ -22,13 +22,34 @@ export const EduBlock = ({ edu, primaryColor, secondaryColor, mutedText }: any) 
   </div>
 );
 
+const levelMap: Record<string, number> = { Beginner: 1, Intermediate: 2, Advanced: 4, Expert: 5 };
+
+const SkillIndicator = ({ skill, pd, color, mutedColor }: any) => {
+  if (pd === 'text' || !pd) return <span className="text-xs ml-1" style={{ color: mutedColor }}>({skill.proficiency})</span>;
+  const level = levelMap[skill.proficiency] || 1;
+  if (pd === 'bars') return (
+    <span className="inline-flex gap-px ml-1.5 align-middle">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className="w-1.5 h-2.5 rounded-xs" style={{ backgroundColor: i <= level ? color : `${mutedColor}30` }} />
+      ))}
+    </span>
+  );
+  return (
+    <span className="inline-flex gap-0 ml-1.5 align-middle">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className="text-xs leading-none" style={{ color: i <= level ? color : `${mutedColor}30` }}>{i <= level ? '★' : '☆'}</span>
+      ))}
+    </span>
+  );
+};
+
 const bg = (isDark: boolean) => isDark ? '#0f172a' : '#ffffff';
 const hdr = (isDark: boolean) => isDark ? '#1e293b' : '#f8fafc';
 
 /* ─── 8 ATS-Friendly Professional CV Templates ─── */
 
 /* 1. Executive Classic — Traditional serif, centered header, ruled sections */
-const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: any) => {
+const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   const rule = `1px solid ${ac}30`;
   return (
@@ -49,7 +70,7 @@ const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark 
         {summary && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({s.proficiency})</span></span>)}</div></div>}
+        {skills.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
         {languages.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
         {projects.length > 0 && <div className="py-3" style={{ borderBottom: rule }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -60,7 +81,7 @@ const ExecutiveClassicCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark 
 };
 
 /* 2. Modern Minimal — Clean sans-serif, left-aligned, accent underline */
-const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: any) => {
+const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
@@ -80,7 +101,7 @@ const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: 
         {summary && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: ac }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}</span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center" style={{ backgroundColor: ac + '15', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ac }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -91,7 +112,7 @@ const ModernMinimalCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: 
 };
 
 /* 3. Clean Professional — Warm accent, rounded skill tags, professional */
-const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any) => {
+const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
@@ -110,7 +131,7 @@ const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark 
         {summary && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}</span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '12', color: pc, border: `1px solid ${pc}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -121,7 +142,7 @@ const CreativeProfessionalCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark 
 };
 
 /* 4. Corporate Blue — Blue accent, horizontal dividers, professional */
-const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any) => {
+const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
@@ -141,7 +162,7 @@ const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any)
         {summary && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: pc }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}</span>)}</div></div>}
+        {skills.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium inline-flex items-center" style={{ backgroundColor: pc + '10', color: pc }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={pc} /></span>)}</div></div>}
         {languages.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}</p>)}</div></div>}
         {projects.length > 0 && <div className="py-3" style={{ borderBottom: `1px solid ${pc}20` }}><h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: pc }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -152,7 +173,7 @@ const CorporateBlueCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any)
 };
 
 /* 5. Minimalist White — Ultra-clean, minimal headers, narrow content */
-const MinimalistWhiteCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: any) => {
+const MinimalistWhiteCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
@@ -172,7 +193,7 @@ const MinimalistWhiteCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }
         {summary && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Professional Summary</h2><p className="text-sm leading-relaxed text-center" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-3 text-center" style={{ color: ac }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-3 text-center" style={{ color: ac }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({s.proficiency})</span></span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={ac} mutedColor={mutedText} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Languages</h2><div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Certifications</h2><div className="space-y-1 text-center">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-[10px] font-medium uppercase tracking-widest mb-2 text-center" style={{ color: ac }}>Projects</h2><div className="space-y-1 text-center">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -183,7 +204,7 @@ const MinimalistWhiteCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }
 };
 
 /* 6. Tech Focus — Monospace headings, clean structure, technical */
-const TechInnovatorCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any) => {
+const TechInnovatorCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   const hBg = isDark ? '#0D1117' : '#f1f5f9';
   const hText = isDark ? '#ffffff' : '#0f172a';
@@ -206,7 +227,7 @@ const TechInnovatorCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any)
         {summary && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-xs font-bold mb-3 font-mono" style={{ color: hAccent }}>// Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-xs font-bold mb-3 font-mono" style={{ color: hAccent }}>// Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium font-mono" style={{ backgroundColor: hAccent + '15', color: hAccent, border: `1px solid ${hAccent}25` }}>{s.name}</span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 rounded text-xs font-medium font-mono inline-flex items-center" style={{ backgroundColor: hAccent + '15', color: hAccent, border: `1px solid ${hAccent}25` }}>{s.name}<SkillIndicator skill={s} pd={pd} color={hAccent} mutedColor={hAccent} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-xs font-bold mb-2 font-mono" style={{ color: hAccent }}>// Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -217,7 +238,7 @@ const TechInnovatorCV = ({ data, pc, sc, hf, bf, text, mutedText, isDark }: any)
 };
 
 /* 7. Elegant Serif — Warm cream bg, serif throughout, refined */
-const ElegantSerifCV = ({ data, pc, hf, bf, text, mutedText, isDark }: any) => {
+const ElegantSerifCV = ({ data, pc, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: isDark ? '#0f172a' : '#FDF8F4', color: text }}>
@@ -236,7 +257,7 @@ const ElegantSerifCV = ({ data, pc, hf, bf, text, mutedText, isDark }: any) => {
         {summary && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Professional Summary</h2><p className="text-sm leading-relaxed" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-sm font-bold italic mb-3 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={mutedText} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-sm font-bold italic mb-3 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={mutedText} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({s.proficiency})</span></span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Skills</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{skills.map((s: any) => <span key={s.id} style={{ color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={pc} mutedColor={mutedText} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm" style={{ color: mutedText }}>{c.name}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-sm font-bold italic mb-2 pb-1" style={{ color: pc, fontFamily: hf, borderBottom: `1px solid ${pc}20` }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}
@@ -247,7 +268,7 @@ const ElegantSerifCV = ({ data, pc, hf, bf, text, mutedText, isDark }: any) => {
 };
 
 /* 8. Bold Statement — Strong contrasts, clean, confident */
-const BoldStatementCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: any) => {
+const BoldStatementCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark, pd }: any) => {
   const { personalInfo, summary, experience, education, skills, languages, certifications, projects, customSections } = data;
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden w-full max-w-[800px]" style={{ fontFamily: bf, backgroundColor: bg(isDark), color: text }}>
@@ -267,7 +288,7 @@ const BoldStatementCV = ({ data, pc, sc, ac, hf, bf, text, mutedText, isDark }: 
         {summary && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Summary</h2><p className="text-sm leading-relaxed font-medium" style={{ color: mutedText }}>{summary}</p></div>}
         {experience.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-3 uppercase" style={{ color: ac }}>Experience</h2><div className="space-y-4">{experience.map((e: any) => <ExpBlock key={e.id} exp={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
         {education.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-3 uppercase" style={{ color: ac }}>Education</h2><div className="space-y-3">{education.map((e: any) => <EduBlock key={e.id} edu={e} primaryColor={pc} secondaryColor={sc} mutedText={mutedText} />)}</div></div>}
-        {skills.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 text-xs font-bold uppercase tracking-wider" style={{ backgroundColor: ac, color: text }}>{s.name}</span>)}</div></div>}
+        {skills.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map((s: any) => <span key={s.id} className="px-3 py-1 text-xs font-bold uppercase tracking-wider inline-flex items-center" style={{ backgroundColor: ac, color: text }}>{s.name}<SkillIndicator skill={s} pd={pd} color={text} mutedColor={text} /></span>)}</div></div>}
         {languages.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Languages</h2><div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium">{languages.map((l: any) => <span key={l.id} style={{ color: text }}>{l.name}<span className="text-xs ml-1 font-normal" style={{ color: mutedText }}>({l.proficiency})</span></span>)}</div></div>}
         {certifications.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Certifications</h2><div className="space-y-1">{certifications.map((c: any) => <p key={c.id} className="text-sm font-medium" style={{ color: mutedText }}>{c.name}</p>)}</div></div>}
         {projects.length > 0 && <div><h2 className="text-xs font-black tracking-widest mb-2 uppercase" style={{ color: ac }}>Projects</h2><div className="space-y-1">{projects.map((p: any) => <p key={p.id} className="text-sm font-medium" style={{ color: mutedText }}>{p.name}</p>)}</div></div>}

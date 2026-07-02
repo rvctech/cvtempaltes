@@ -441,7 +441,7 @@ const DocumentPreview = () => {
   const text = isDark ? '#f1f5f9' : '#1a1a1a';
   const mutedText = isDark ? '#94a3b8' : '#6b7280';
 
-  const shared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark };
+  const shared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: customization.proficiencyDisplay };
 
   const Renderer = cvTemplateMap[selectedTemplateId] || cvTemplateMap['modern-minimal-cv'];
   return <Renderer {...shared} />;
