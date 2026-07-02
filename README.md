@@ -6,7 +6,7 @@ A modern single-page application for creating, customizing, and exporting profes
 
 - **8 Template Pairs** — Executive Classic, Modern Minimal, Creative Professional, Corporate Blue, Minimalist White, Tech Innovator, Elegant Serif, Bold Statement (each CV has a matching cover letter)
 - **Full CRUD Editor** — Add, edit, reorder, and remove sections (work experience, education, skills, certifications, languages, projects, custom sections)
-- **Customization** — 12 color presets, 16 Google Fonts, font size/spacing controls, layout options, accent styles, dark/light mode
+- **Customization** — 12 color presets, 16 Google Fonts, font size/spacing controls, single/two-column layout, accent styles (lines/dots/shapes/borders/geometric), skills proficiency display (text/bars/stars/circles), dark/light mode
 - **Export** — PDF export (CV, cover letter, or both combined), browser printing, JSON import/export
 - **Advanced** — ATS score checker, document version manager, auto-save, session recovery
 - **Dark Mode** — Class-based dark toggle with Tailwind v4 custom variant (`@custom-variant dark`)

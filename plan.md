@@ -348,7 +348,10 @@ interface CVStore {
    - Light/Dark mode switch
    - Tailwind `dark:` class support
 5. **Accent Style:**
-   - Radio buttons for decorative elements (lines, dots, shapes, borders)
+   - Grid selector for decorative elements: lines, dots, shapes, borders, circles, geometric
+   - Affects section dividers (border style) and section header bullet characters
+6. **Skills Display:**
+   - Toggle between text, bars (unicode blocks), stars, and circles for skill proficiency indicators
 
 ---
 
@@ -517,7 +520,7 @@ interface CVStore {
 
 2. **8 Template Pairs** - Executive Classic, Modern Minimal, Creative Professional, Corporate Blue, Minimalist White, Tech Innovator, Elegant Serif, Bold Statement
 
-3. **Customization** - 12 color presets, 16 Google Fonts, font size/spacing controls, layout options, accent styles, dark/light mode
+3. **Customization** - 12 color presets, 16 Google Fonts, font size/spacing controls, single/two-column layout, accent styles (lines/dots/shapes/borders/circles/geometric), proficiency display modes (text/bars/stars/circles), dark/light mode
 
 4. **Export** - PDF export (CV, Cover Letter, or both), Print, JSON import/export
 
