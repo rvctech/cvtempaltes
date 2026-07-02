@@ -6,6 +6,7 @@ import { CoverLetterEditor } from './components/editor/CoverLetterEditor';
 import { Preview } from './components/preview/Preview';
 import { Navbar } from './components/ui/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
+import { CustomizationPanel } from './components/ui/CustomizationPanel';
 import { ToastProvider } from './components/ui/Toast';
 import { useAutoSave } from './hooks/useAutoSave';
 
@@ -39,6 +40,11 @@ function AppContent() {
           {viewMode === 'cover-letter-editor' && <CoverLetterEditor />}
           {viewMode === 'preview' && <Preview />}
         </main>
+        {hasSidebar && (
+          <aside className="w-80 xl:w-96 overflow-y-auto border-l border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-[#0b1120]/50 backdrop-blur-sm">
+            <CustomizationPanel />
+          </aside>
+        )}
       </div>
     </div>
   );
