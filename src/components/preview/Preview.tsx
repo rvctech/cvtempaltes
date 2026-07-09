@@ -21,8 +21,22 @@ export const Preview = () => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const pagePixelHeight = (canvas.width * pdfHeight) / pdfWidth;
+
+      let heightLeft = canvas.height;
+      let pos = 0;
+      pdf.addImage(imgData, 'PNG', 0, pos, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+      heightLeft -= pagePixelHeight;
+      pos -= pagePixelHeight;
+
+      while (heightLeft > 0) {
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, pos, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+        heightLeft -= pagePixelHeight;
+        pos -= pagePixelHeight;
+      }
+
       pdf.save(`${filename}.pdf`);
     } catch (error) {
       console.error('Export failed:', error);
@@ -31,27 +45,42 @@ export const Preview = () => {
     }
   };
 
+  const addPagesToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement) => {
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgData = canvas.toDataURL('image/png');
+    const pagePixelHeight = (canvas.width * pdfHeight) / pdfWidth;
+
+    let heightLeft = canvas.height;
+    let pos = 0;
+    pdf.addImage(imgData, 'PNG', 0, pos, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+    heightLeft -= pagePixelHeight;
+    pos -= pagePixelHeight;
+
+    while (heightLeft > 0) {
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, pos, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+      heightLeft -= pagePixelHeight;
+      pos -= pagePixelHeight;
+    }
+  };
+
   const handleExportBoth = async () => {
     setExporting(true);
     try {
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
 
       const cvElement = document.getElementById('cv-preview-export');
       if (cvElement) {
         const cvCanvas = await html2canvas(cvElement, { scale: 2, useCORS: true });
-        const cvImgData = cvCanvas.toDataURL('image/png');
-        const cvHeight = (cvCanvas.height * pdfWidth) / cvCanvas.width;
-        pdf.addImage(cvImgData, 'PNG', 0, 0, pdfWidth, cvHeight);
+        addPagesToPDF(pdf, cvCanvas);
         pdf.addPage();
       }
 
       const clElement = document.getElementById('cl-preview-export');
       if (clElement) {
         const clCanvas = await html2canvas(clElement, { scale: 2, useCORS: true });
-        const clImgData = clCanvas.toDataURL('image/png');
-        const clHeight = (clCanvas.height * pdfWidth) / clCanvas.width;
-        pdf.addImage(clImgData, 'PNG', 0, 0, pdfWidth, clHeight);
+        addPagesToPDF(pdf, clCanvas);
       }
 
       pdf.save('cv-and-cover-letter.pdf');

@@ -74,7 +74,8 @@ export interface Education {
 export interface Skill {
   id: string;
   name: string;
-  proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  proficiency?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  category?: string;
 }
 
 export interface Certification {

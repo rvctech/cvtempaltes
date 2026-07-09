@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useStore } from '../../store/useStore';
-import { Plus, Trash2, ChevronDown, ChevronUp, User, FileText, Briefcase, GraduationCap, Wrench, Languages, FolderOpen, Award, BookOpen } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronUp, User, FileText, Briefcase, GraduationCap, Wrench, Languages, FolderOpen, Award, BookOpen, Link as LinkIcon } from 'lucide-react';
 import { cvTemplateMap } from './previewRenderers';
+import MarkdownEditor from './MarkdownEditor';
 
 export const Editor = () => {
   return (
@@ -68,26 +69,6 @@ const Input = ({
   />
 );
 
-const TextArea = ({
-  value,
-  onChange,
-  placeholder,
-  rows = 3,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  rows?: number;
-}) => (
-  <textarea
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className="w-full px-2.5 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all"
-    rows={rows}
-    placeholder={placeholder}
-  />
-);
-
 const CVEditor = () => {
   const { cvData, updatePersonalInfo, updateSummary } = useStore();
   const pi = cvData.personalInfo;
@@ -106,10 +87,10 @@ const CVEditor = () => {
       </CollapsibleSection>
 
       <CollapsibleSection title="Professional Summary" icon={FileText}>
-        <TextArea
+        <MarkdownEditor
           value={cvData.summary}
           onChange={(v) => updateSummary(v)}
-          placeholder="Write a brief professional summary..."
+          placeholder="Write a brief professional summary... (Markdown supported)"
           rows={4}
         />
       </CollapsibleSection>
@@ -120,6 +101,7 @@ const CVEditor = () => {
       <CertificationsEditor />
       <LanguagesEditor />
       <ProjectsEditor />
+      <ReferencesEditor />
       <CustomSectionsEditor />
     </>
   );
@@ -162,7 +144,7 @@ const ExperienceEditor = () => {
               <Input value={exp.startDate} onChange={(v) => updateExperience(exp.id, { startDate: v })} placeholder="Start" />
               <Input value={exp.endDate} onChange={(v) => updateExperience(exp.id, { endDate: v })} placeholder="End" />
             </div>
-            <TextArea
+            <MarkdownEditor
               value={exp.description}
               onChange={(v) => updateExperience(exp.id, { description: v })}
               placeholder="Describe responsibilities and achievements..."
@@ -243,37 +225,75 @@ const EducationEditor = () => {
 const SkillsEditor = () => {
   const { cvData, addSkill, updateSkill, removeSkill } = useStore();
   const [newSkill, setNewSkill] = useState('');
+  const [newCategory, setNewCategory] = useState('');
 
   const handleAdd = () => {
-    if (!newSkill.trim()) return;
-    addSkill({ id: `skill-${Date.now()}`, name: newSkill, proficiency: 'Intermediate' });
+    const names = newSkill.split(/[,\n]/).map(s => s.replace(/^[-•*]\s*/, '').trim()).filter(Boolean);
+    if (names.length === 0) return;
+    names.forEach(name => {
+      addSkill({ id: `skill-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, name, category: newCategory.trim() || undefined, proficiency: newCategory.trim() ? undefined : 'Intermediate' });
+    });
     setNewSkill('');
+    setNewCategory('');
   };
+
+  const groups: Record<string, typeof cvData.skills> = {};
+  const uncategorized: typeof cvData.skills = [];
+  cvData.skills.forEach(s => {
+    if (s.category) {
+      if (!groups[s.category]) groups[s.category] = [];
+      groups[s.category].push(s);
+    } else {
+      uncategorized.push(s);
+    }
+  });
+
+  const renderSkillCard = (skill: typeof cvData.skills[0], showProficiency = true) => (
+    <div key={skill.id} className="flex items-center gap-2 pl-2">
+      <Input value={skill.name} onChange={(v) => updateSkill(skill.id, { name: v })} placeholder="Skill" />
+      {showProficiency && (
+        <select
+          value={skill.proficiency || 'Intermediate'}
+          onChange={(e) => updateSkill(skill.id, { proficiency: e.target.value as any })}
+          className="px-2 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 w-28 shrink-0"
+        >
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+          <option value="Expert">Expert</option>
+        </select>
+      )}
+      <button onClick={() => removeSkill(skill.id)} className="text-gray-400 hover:text-red-500 p-1 shrink-0">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  );
 
   return (
     <CollapsibleSection title="Skills" icon={Wrench}>
-      <div className="space-y-2">
-        {cvData.skills.map((skill) => (
-          <div key={skill.id} className="flex items-center gap-2">
-            <Input value={skill.name} onChange={(v) => updateSkill(skill.id, { name: v })} placeholder="Skill" />
-            <select
-              value={skill.proficiency}
-              onChange={(e) => updateSkill(skill.id, { proficiency: e.target.value as any })}
-              className="px-2 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 w-28"
-            >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-              <option value="Expert">Expert</option>
-            </select>
-            <button onClick={() => removeSkill(skill.id)} className="text-gray-400 hover:text-red-500 p-1 shrink-0">
-              <Trash2 className="w-3 h-3" />
-            </button>
+      <div className="space-y-3">
+        {Object.entries(groups).map(([category, catSkills]) => (
+          <div key={category}>
+            <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">{category}</p>
+            <div className="space-y-1.5">
+              {catSkills.map(s => renderSkillCard(s, false))}
+            </div>
           </div>
         ))}
-        <div className="flex gap-2">
-          <Input value={newSkill} onChange={setNewSkill} placeholder="New skill" />
-          <button onClick={handleAdd} className="px-2.5 py-1.5 bg-purple-600 text-white rounded-md text-xs hover:bg-purple-700 transition-colors shrink-0">
+        {uncategorized.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1">Uncategorized</p>
+            <div className="space-y-1.5">
+              {uncategorized.map(s => renderSkillCard(s))}
+            </div>
+          </div>
+        )}
+        <div className="flex gap-2 pt-1">
+          <div className="flex-1 space-y-1">
+            <Input value={newSkill} onChange={setNewSkill} placeholder="JavaScript, Python, Rust — or one per line" />
+            <Input value={newCategory} onChange={setNewCategory} placeholder="Category (group skills together)" />
+          </div>
+          <button onClick={handleAdd} className="px-2.5 py-1.5 bg-purple-600 text-white rounded-md text-xs hover:bg-purple-700 transition-colors shrink-0 self-end">
             <Plus className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -383,7 +403,8 @@ const ProjectsEditor = () => {
               </button>
             </div>
             <Input value={proj.name} onChange={(v) => updateProject(proj.id, { name: v })} placeholder="Project name" />
-            <TextArea value={proj.description} onChange={(v) => updateProject(proj.id, { description: v })} placeholder="Describe the project..." rows={2} />
+            <MarkdownEditor value={proj.description} onChange={(v) => updateProject(proj.id, { description: v })} placeholder="Describe the project..." rows={2} />
+            <Input value={proj.technologies?.join(', ') || ''} onChange={(v) => updateProject(proj.id, { technologies: v.split(',').map((t: string) => t.trim()).filter(Boolean) })} placeholder="Technologies (comma-separated)" />
             <Input value={proj.link || ''} onChange={(v) => updateProject(proj.id, { link: v })} placeholder="Project link (optional)" />
           </div>
         ))}
@@ -419,12 +440,51 @@ const CustomSectionsEditor = () => {
                 <Trash2 className="w-3 h-3" />
               </button>
             </div>
-            <TextArea value={section.content} onChange={(v) => updateCustomSection(section.id, { content: v })} placeholder="Section content..." rows={3} />
+            <MarkdownEditor value={section.content} onChange={(v) => updateCustomSection(section.id, { content: v })} placeholder="Section content..." rows={3} />
           </div>
         ))}
         <div className="flex gap-2">
           <Input value={newTitle} onChange={setNewTitle} placeholder="Section title" />
           <button onClick={handleAdd} className="px-2.5 py-1.5 bg-gray-600 text-white rounded-md text-xs hover:bg-gray-700 transition-colors shrink-0">
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    </CollapsibleSection>
+  );
+};
+
+const ReferencesEditor = () => {
+  const { cvData, addReference, updateReference, removeReference } = useStore();
+  const [newName, setNewName] = useState('');
+
+  const handleAdd = () => {
+    if (!newName.trim()) return;
+    addReference({ id: `ref-${Date.now()}`, name: newName, company: '', role: '', email: '', phone: '' });
+    setNewName('');
+  };
+
+  return (
+    <CollapsibleSection title="References" icon={LinkIcon}>
+      <div className="space-y-2.5">
+        {cvData.references.map((ref) => (
+          <div key={ref.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-pink-600 dark:text-pink-400 truncate">{ref.name || 'New Reference'}</span>
+              <button onClick={() => removeReference(ref.id)} className="text-gray-400 hover:text-red-500 p-0.5">
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <Input value={ref.name} onChange={(v) => updateReference(ref.id, { name: v })} placeholder="Full name" />
+            <Input value={ref.company} onChange={(v) => updateReference(ref.id, { company: v })} placeholder="Company" />
+            <Input value={ref.role} onChange={(v) => updateReference(ref.id, { role: v })} placeholder="Role / Title" />
+            <Input value={ref.email} onChange={(v) => updateReference(ref.id, { email: v })} placeholder="Email" type="email" />
+            <Input value={ref.phone || ''} onChange={(v) => updateReference(ref.id, { phone: v })} placeholder="Phone (optional)" type="tel" />
+          </div>
+        ))}
+        <div className="flex gap-2">
+          <Input value={newName} onChange={setNewName} placeholder="Reference name" />
+          <button onClick={handleAdd} className="px-2.5 py-1.5 bg-pink-600 text-white rounded-md text-xs hover:bg-pink-700 transition-colors shrink-0">
             <Plus className="w-3.5 h-3.5" />
           </button>
         </div>

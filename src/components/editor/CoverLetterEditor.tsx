@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore';
 import { Plus, Trash2, ChevronDown, ChevronUp, User, FileText, Pen } from 'lucide-react';
 import { clTemplateMap } from './previewRenderers';
 import { getMatchingCoverLetter } from '../../data/templates';
+import MarkdownEditor from './MarkdownEditor';
 
 export const CoverLetterEditor = () => {
   return (
@@ -69,26 +70,6 @@ const Input = ({
   />
 );
 
-const TextArea = ({
-  value,
-  onChange,
-  placeholder,
-  rows = 4,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  rows?: number;
-}) => (
-  <textarea
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className="w-full px-2.5 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all"
-    rows={rows}
-    placeholder={placeholder}
-  />
-);
-
 const CoverLetterForm = () => {
   const { coverLetterData, updateCoverLetterRecipient, addParagraph, updateParagraph, removeParagraph } = useStore();
   const cl = coverLetterData;
@@ -121,7 +102,7 @@ const CoverLetterForm = () => {
                   <Trash2 className="w-3 h-3" />
                 </button>
               </div>
-              <TextArea value={para.content} onChange={(v) => updateParagraph(para.id, v)} placeholder="Write your paragraph..." rows={4} />
+              <MarkdownEditor value={para.content} onChange={(v) => updateParagraph(para.id, v)} placeholder="Write your paragraph..." rows={4} />
             </div>
           ))}
           <button
