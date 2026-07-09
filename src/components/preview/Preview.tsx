@@ -5,6 +5,7 @@ import { Download, Printer, File } from 'lucide-react';
 import { useState } from 'react';
 import { cvTemplateMap, clTemplateMap } from '../editor/previewRenderers';
 import { getMatchingCoverLetter } from '../../data/templates';
+import PageBreakPreview from '../editor/PageBreakPreview';
 
 export const Preview = () => {
   const [activeTab, setActiveTab] = useState<'cv' | 'cover-letter'>('cv');
@@ -170,11 +171,11 @@ export const Preview = () => {
       <div className="flex-1 overflow-auto bg-white dark:bg-[#0b1120] border border-gray-200 dark:border-gray-700/60 rounded-xl p-6 flex justify-center">
         {activeTab === 'cv' ? (
           <div id="cv-preview-export" className="h-fit">
-            <CVRenderer {...cvShared} />
+            <PageBreakPreview><CVRenderer {...cvShared} /></PageBreakPreview>
           </div>
         ) : (
           <div id="cl-preview-export" className="h-fit">
-            <CLRenderer {...clShared} />
+            <PageBreakPreview><CLRenderer {...clShared} /></PageBreakPreview>
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore';
 import { Plus, Trash2, ChevronDown, ChevronUp, User, FileText, Briefcase, GraduationCap, Wrench, Languages, FolderOpen, Award, BookOpen, Link as LinkIcon } from 'lucide-react';
 import { cvTemplateMap } from './previewRenderers';
 import MarkdownEditor from './MarkdownEditor';
+import PageBreakPreview from './PageBreakPreview';
 
 export const Editor = () => {
   return (
@@ -504,5 +505,5 @@ const DocumentPreview = () => {
   const shared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: customization.proficiencyDisplay, layout: customization.layout };
 
   const Renderer = cvTemplateMap[selectedTemplateId] || cvTemplateMap['modern-minimal-cv'];
-  return <Renderer {...shared} />;
+  return <PageBreakPreview><Renderer {...shared} /></PageBreakPreview>;
 };
