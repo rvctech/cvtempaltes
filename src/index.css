@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
@@ -20,16 +18,6 @@
   --foreground: #0f172a;
   --muted: #64748b;
   --border: #e2e8f0;
-}
-
-.dark {
-  --primary: #e2e8f0;
-  --secondary: #94a3b8;
-  --accent: #818cf8;
-  --background: #080e1a;
-  --foreground: #f1f5f9;
-  --muted: #94a3b8;
-  --border: #1e293b;
 }
 
 * {
@@ -51,19 +39,10 @@ body {
   color: #94a3b8;
 }
 
-.dark ::placeholder {
-  color: #64748b;
-}
-
 input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-}
-
-.dark input:focus-visible, .dark textarea:focus-visible, .dark select:focus-visible {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
 }
 
 ::-webkit-scrollbar {
@@ -82,14 +61,6 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
 }
 
 @page {

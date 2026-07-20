@@ -157,7 +157,6 @@ export interface CustomizationState {
   lineHeight: number;
   paragraphSpacing: number;
   layout: LayoutType;
-  theme: 'light' | 'dark';
   accentStyle: AccentStyle;
   selectedThemeIndex: number;
   proficiencyDisplay: 'text' | 'bars' | 'stars' | 'circles';

@@ -8,15 +8,15 @@ import PageBreakPreview from './PageBreakPreview';
 export const Editor = () => {
   return (
     <div className="flex h-full">
-      <div className="w-96 bg-white dark:bg-[#0b1120] border-r border-gray-200 dark:border-gray-800/60 flex flex-col overflow-hidden shrink-0">
-        <div className="px-4 py-2.5 border-b border-gray-200 dark:border-gray-800/60">
-          <h2 className="font-semibold text-xs text-gray-900 dark:text-gray-100">Edit Document</h2>
+      <div className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden shrink-0">
+        <div className="px-4 py-2.5 border-b border-gray-200">
+          <h2 className="font-semibold text-xs text-gray-900">Edit Document</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           <CVEditor />
         </div>
       </div>
-      <div className="flex-1 overflow-auto p-6 flex justify-center bg-gray-50/50 dark:bg-gray-900/30">
+      <div className="flex-1 overflow-auto p-6 flex justify-center bg-gray-50/50">
         <DocumentPreview />
       </div>
     </div>
@@ -36,13 +36,13 @@ const CollapsibleSection = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700/60 overflow-hidden">
+    <div className="rounded-lg border border-gray-200 overflow-hidden">
       <button
-        className="w-full px-3.5 py-2.5 text-left font-medium text-xs flex items-center gap-2 bg-gray-50 dark:bg-gray-800/30 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
+        className="w-full px-3.5 py-2.5 text-left font-medium text-xs flex items-center gap-2 bg-gray-50 hover:bg-gray-100 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Icon className="w-3.5 h-3.5 text-gray-400" />
-        <span className="flex-1 text-gray-700 dark:text-gray-300">{title}</span>
+        <span className="flex-1 text-gray-700">{title}</span>
         {isOpen ? <ChevronUp className="w-3 h-3 text-gray-400" /> : <ChevronDown className="w-3 h-3 text-gray-400" />}
       </button>
       {isOpen && <div className="p-3.5 space-y-2.5">{children}</div>}
@@ -65,7 +65,7 @@ const Input = ({
     type={type}
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className="w-full px-2.5 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+    className="w-full px-2.5 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
     placeholder={placeholder}
   />
 );
@@ -132,9 +132,9 @@ const ExperienceEditor = () => {
     <CollapsibleSection title="Work Experience" icon={Briefcase}>
       <div className="space-y-2.5">
         {cvData.experience.map((exp) => (
-          <div key={exp.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={exp.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 truncate">{exp.role || 'New Position'}</span>
+              <span className="text-[11px] font-medium text-indigo-600 truncate">{exp.role || 'New Position'}</span>
               <button onClick={() => removeExperience(exp.id)} className="text-gray-400 hover:text-red-500 p-0.5">
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -192,9 +192,9 @@ const EducationEditor = () => {
     <CollapsibleSection title="Education" icon={GraduationCap}>
       <div className="space-y-2.5">
         {cvData.education.map((edu) => (
-          <div key={edu.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={edu.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-green-600 dark:text-green-400 truncate">{edu.degree || 'New Education'}</span>
+              <span className="text-[11px] font-medium text-green-600 truncate">{edu.degree || 'New Education'}</span>
               <button onClick={() => removeEducation(edu.id)} className="text-gray-400 hover:text-red-500 p-0.5">
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -256,7 +256,7 @@ const SkillsEditor = () => {
         <select
           value={skill.proficiency || 'Intermediate'}
           onChange={(e) => updateSkill(skill.id, { proficiency: e.target.value as any })}
-          className="px-2 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 w-28 shrink-0"
+          className="px-2 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md text-gray-900 w-28 shrink-0"
         >
           <option value="Beginner">Beginner</option>
           <option value="Intermediate">Intermediate</option>
@@ -275,7 +275,7 @@ const SkillsEditor = () => {
       <div className="space-y-3">
         {Object.entries(groups).map(([category, catSkills]) => (
           <div key={category}>
-            <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">{category}</p>
+            <p className="text-xs font-semibold text-purple-600 mb-1">{category}</p>
             <div className="space-y-1.5">
               {catSkills.map(s => renderSkillCard(s, false))}
             </div>
@@ -283,7 +283,7 @@ const SkillsEditor = () => {
         ))}
         {uncategorized.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1">Uncategorized</p>
+            <p className="text-xs font-semibold text-gray-400 mb-1">Uncategorized</p>
             <div className="space-y-1.5">
               {uncategorized.map(s => renderSkillCard(s))}
             </div>
@@ -317,9 +317,9 @@ const CertificationsEditor = () => {
     <CollapsibleSection title="Certifications" icon={Award}>
       <div className="space-y-2">
         {cvData.certifications.map((cert) => (
-          <div key={cert.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={cert.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-yellow-600 dark:text-yellow-400 truncate">{cert.name || 'New Certification'}</span>
+              <span className="text-[11px] font-medium text-yellow-600 truncate">{cert.name || 'New Certification'}</span>
               <button onClick={() => removeCertification(cert.id)} className="text-gray-400 hover:text-red-500 p-0.5">
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -359,7 +359,7 @@ const LanguagesEditor = () => {
             <select
               value={lang.proficiency}
               onChange={(e) => updateLanguage(lang.id, { proficiency: e.target.value as any })}
-              className="px-2 py-1.5 text-xs bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded-md text-gray-900 dark:text-gray-100 w-28"
+              className="px-2 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md text-gray-900 w-28"
             >
               <option value="Basic">Basic</option>
               <option value="Conversational">Conversational</option>
@@ -396,9 +396,9 @@ const ProjectsEditor = () => {
     <CollapsibleSection title="Projects" icon={FolderOpen}>
       <div className="space-y-2.5">
         {cvData.projects.map((proj) => (
-          <div key={proj.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={proj.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-cyan-600 dark:text-cyan-400 truncate">{proj.name || 'New Project'}</span>
+              <span className="text-[11px] font-medium text-cyan-600 truncate">{proj.name || 'New Project'}</span>
               <button onClick={() => removeProject(proj.id)} className="text-gray-400 hover:text-red-500 p-0.5">
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -434,7 +434,7 @@ const CustomSectionsEditor = () => {
     <CollapsibleSection title="Custom Sections" icon={BookOpen}>
       <div className="space-y-2.5">
         {cvData.customSections.map((section) => (
-          <div key={section.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={section.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center gap-2">
               <Input value={section.title} onChange={(v) => updateCustomSection(section.id, { title: v })} placeholder="Section title" />
               <button onClick={() => removeCustomSection(section.id)} className="text-gray-400 hover:text-red-500 p-0.5 shrink-0">
@@ -469,9 +469,9 @@ const ReferencesEditor = () => {
     <CollapsibleSection title="References" icon={LinkIcon}>
       <div className="space-y-2.5">
         {cvData.references.map((ref) => (
-          <div key={ref.id} className="p-3 rounded-md border border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/20 space-y-2">
+          <div key={ref.id} className="p-3 rounded-md border border-gray-200 bg-gray-50/50 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-pink-600 dark:text-pink-400 truncate">{ref.name || 'New Reference'}</span>
+              <span className="text-[11px] font-medium text-pink-600 truncate">{ref.name || 'New Reference'}</span>
               <button onClick={() => removeReference(ref.id)} className="text-gray-400 hover:text-red-500 p-0.5">
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -496,13 +496,12 @@ const ReferencesEditor = () => {
 
 const DocumentPreview = () => {
   const { cvData, customization, selectedTemplateId } = useStore();
-  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont, theme } = customization;
+  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont } = customization;
 
-  const isDark = theme === 'dark';
-  const text = isDark ? '#f1f5f9' : '#1a1a1a';
-  const mutedText = isDark ? '#94a3b8' : '#6b7280';
+  const text = '#1a1a1a';
+  const mutedText = '#6b7280';
 
-  const shared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: customization.proficiencyDisplay, layout: customization.layout };
+  const shared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark: false, pd: customization.proficiencyDisplay, layout: customization.layout };
 
   const Renderer = cvTemplateMap[selectedTemplateId] || cvTemplateMap['modern-minimal-cv'];
   return <PageBreakPreview><Renderer {...shared} /></PageBreakPreview>;

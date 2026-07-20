@@ -151,7 +151,6 @@ const defaultCustomization: CustomizationState = {
   lineHeight: 1.5,
   paragraphSpacing: 16,
   layout: 'single',
-  theme: 'dark',
   accentStyle: 'lines',
   selectedThemeIndex: 0,
   proficiencyDisplay: 'text',

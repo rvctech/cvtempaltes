@@ -24,7 +24,7 @@ const MarkdownRenderer = ({ content, className, style }: MarkdownRendererProps) 
           h1: ({ children, ...props }) => <h1 className="text-base font-bold mt-2 mb-1" style={style} {...props}>{children}</h1>,
           h2: ({ children, ...props }) => <h2 className="text-sm font-bold mt-2 mb-1" style={style} {...props}>{children}</h2>,
           h3: ({ children, ...props }) => <h3 className="text-sm font-semibold mt-1 mb-0.5" style={style} {...props}>{children}</h3>,
-          code: ({ children, ...props }) => <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded" {...props}>{children}</code>,
+          code: ({ children, ...props }) => <code className="text-xs bg-gray-100 px-1 rounded" {...props}>{children}</code>,
           a: ({ children, href, ...props }) => <a href={href} target="_blank" rel="noopener noreferrer" className="underline" style={{ color: style?.color }} {...props}>{children}</a>,
         }}
       >

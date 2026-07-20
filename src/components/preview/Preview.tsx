@@ -11,7 +11,7 @@ export const Preview = () => {
   const [activeTab, setActiveTab] = useState<'cv' | 'cover-letter'>('cv');
   const [exporting, setExporting] = useState(false);
   const { cvData, coverLetterData, customization, selectedTemplateId } = useStore();
-  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont, theme, proficiencyDisplay, layout } = customization;
+  const { primaryColor, secondaryColor, accentColor, headingFont, bodyFont, proficiencyDisplay, layout } = customization;
 
   const handleExportPDF = async (elementId: string, filename: string) => {
     setExporting(true);
@@ -96,9 +96,9 @@ export const Preview = () => {
     window.print();
   };
 
-  const isDark = theme === 'dark';
-  const text = isDark ? '#f1f5f9' : '#1a1a1a';
-  const mutedText = isDark ? '#94a3b8' : '#6b7280';
+  const isDark = false;
+  const text = '#1a1a1a';
+  const mutedText = '#6b7280';
 
   const cvShared = { data: cvData, pc: primaryColor, sc: secondaryColor, ac: accentColor, hf: headingFont, bf: bodyFont, text, mutedText, isDark, pd: proficiencyDisplay, layout };
   const clTemplateId = getMatchingCoverLetter(selectedTemplateId) || 'modern-minimal-cl';
@@ -109,16 +109,16 @@ export const Preview = () => {
 
   return (
     <div className="h-full flex flex-col p-5 gap-4">
-      <div className="shrink-0 bg-white dark:bg-[#0b1120] border border-gray-200 dark:border-gray-700/60 rounded-xl p-3 flex items-center justify-between">
+      <div className="shrink-0 bg-white border border-gray-200 rounded-xl p-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">Export</h2>
-          <div className="flex bg-gray-100 dark:bg-gray-800/50 rounded-lg p-0.5 gap-0.5">
+          <h2 className="text-xs font-semibold text-gray-900">Export</h2>
+          <div className="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
             <button
               onClick={() => setActiveTab('cv')}
               className={`px-3 py-1.5 text-[11px] font-medium rounded-md transition-all ${
                 activeTab === 'cv'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               CV
@@ -127,8 +127,8 @@ export const Preview = () => {
               onClick={() => setActiveTab('cover-letter')}
               className={`px-3 py-1.5 text-[11px] font-medium rounded-md transition-all ${
                 activeTab === 'cover-letter'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               Cover Letter
@@ -139,7 +139,7 @@ export const Preview = () => {
         <div className="flex items-center gap-1.5">
           <button
             onClick={handlePrint}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/50 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
           >
             <Printer className="w-3 h-3" />
             Print
@@ -168,14 +168,14 @@ export const Preview = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white dark:bg-[#0b1120] border border-gray-200 dark:border-gray-700/60 rounded-xl p-6 flex justify-center">
+      <div className="flex-1 overflow-auto bg-white border border-gray-200 rounded-xl p-6 flex justify-center">
         {activeTab === 'cv' ? (
-          <div id="cv-preview-export" className="h-fit">
-            <PageBreakPreview><CVRenderer {...cvShared} /></PageBreakPreview>
+          <div className="h-fit w-full">
+            <PageBreakPreview contentId="cv-preview-export"><CVRenderer {...cvShared} /></PageBreakPreview>
           </div>
         ) : (
-          <div id="cl-preview-export" className="h-fit">
-            <PageBreakPreview><CLRenderer {...clShared} /></PageBreakPreview>
+          <div className="h-fit w-full">
+            <PageBreakPreview contentId="cl-preview-export"><CLRenderer {...clShared} /></PageBreakPreview>
           </div>
         )}
       </div>

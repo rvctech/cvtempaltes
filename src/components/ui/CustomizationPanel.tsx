@@ -1,7 +1,7 @@
 import { useStore } from '../../store/useStore';
 import { cvTemplates } from '../../data/templates';
 import type { LayoutType, AccentStyle } from '../../types';
-import { Palette, Type, Layout, Sliders, Moon, Sun, Paintbrush, Sparkles } from 'lucide-react';
+import { Palette, Type, Layout, Sliders, Paintbrush, Sparkles } from 'lucide-react';
 
 const FONTS = [
   { name: 'Playfair Display', category: 'Serif' },
@@ -44,12 +44,12 @@ export const CustomizationPanel = () => {
 
   return (
     <div className="space-y-6 p-4 glass-card rounded-xl">
-      <h3 className="font-bold text-gray-900 dark:text-white">Customize Template</h3>
+      <h3 className="font-bold text-gray-900">Customize Template</h3>
 
       {/* Template Themes */}
       {templateThemes.length > 0 && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
             <Sparkles className="w-4 h-4" />
             {currentTemplate?.name ?? 'Template'} Themes
           </div>
@@ -69,8 +69,8 @@ export const CustomizationPanel = () => {
                 }}
                 className={`p-2.5 rounded-lg border-2 text-left transition-all ${
                   customization.selectedThemeIndex === i
-                    ? 'border-indigo-500 ring-1 ring-indigo-500/30 bg-indigo-50/50 dark:bg-indigo-500/10'
-                    : 'border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800/30'
+                    ? 'border-indigo-500 ring-1 ring-indigo-500/30 bg-indigo-50/50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="flex gap-1.5 mb-1.5">
@@ -80,12 +80,12 @@ export const CustomizationPanel = () => {
                 </div>
                 <span className={`text-xs font-medium ${
                   customization.selectedThemeIndex === i
-                    ? 'text-indigo-700 dark:text-indigo-300'
-                    : 'text-gray-600 dark:text-gray-400'
+                    ? 'text-indigo-700'
+                    : 'text-gray-600'
                 }`}>
                   {theme.name}
                 </span>
-                <span className="block text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">
+                <span className="block text-[10px] text-gray-400 mt-0.5 truncate">
                   {theme.fonts.heading} / {theme.fonts.body}
                 </span>
               </button>
@@ -96,7 +96,7 @@ export const CustomizationPanel = () => {
 
       {/* Color Theme */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Palette className="w-4 h-4" />
           Color Presets
         </div>
@@ -115,7 +115,7 @@ export const CustomizationPanel = () => {
               className={`p-2 rounded-lg border-2 text-left transition-all ${
                 customization.primaryColor === preset.primary
                   ? 'border-indigo-500 glass'
-                  : 'border-white/30 dark:border-white/10 glass hover:border-white/50 dark:hover:border-white/20'
+                  : 'border-white/30 glass hover:border-white/50'
               }`}
             >
               <div className="flex gap-1 mb-1">
@@ -123,7 +123,7 @@ export const CustomizationPanel = () => {
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.secondary }} />
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.accent }} />
               </div>
-              <span className="text-xs text-gray-600 dark:text-gray-400">{preset.name}</span>
+              <span className="text-xs text-gray-600">{preset.name}</span>
             </button>
           ))}
         </div>
@@ -131,7 +131,7 @@ export const CustomizationPanel = () => {
 
       {/* Custom Colors */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Paintbrush className="w-4 h-4" />
           Custom Colors
         </div>
@@ -156,7 +156,7 @@ export const CustomizationPanel = () => {
 
       {/* Fonts */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Type className="w-4 h-4" />
           Fonts
         </div>
@@ -164,7 +164,7 @@ export const CustomizationPanel = () => {
           <select
             value={customization.headingFont}
             onChange={(e) => updateCustomization({ headingFont: e.target.value })}
-            className="w-full px-3 py-2 glass-input rounded-md text-sm text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 glass-input rounded-md text-sm text-gray-900"
           >
             {FONTS.map((f) => (
               <option key={f.name} value={f.name}>
@@ -175,7 +175,7 @@ export const CustomizationPanel = () => {
           <select
             value={customization.bodyFont}
             onChange={(e) => updateCustomization({ bodyFont: e.target.value })}
-            className="w-full px-3 py-2 glass-input rounded-md text-sm text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 glass-input rounded-md text-sm text-gray-900"
           >
             {FONTS.map((f) => (
               <option key={f.name} value={f.name}>
@@ -188,13 +188,13 @@ export const CustomizationPanel = () => {
 
       {/* Font Size */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Sliders className="w-4 h-4" />
           Font Size
         </div>
         <div className="space-y-2">
           <div>
-            <label className="text-xs text-gray-500 dark:text-gray-400">Body: {customization.fontSize}px</label>
+            <label className="text-xs text-gray-500">Body: {customization.fontSize}px</label>
             <input
               type="range"
               min="10"
@@ -205,7 +205,7 @@ export const CustomizationPanel = () => {
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 dark:text-gray-400">Line Height: {customization.lineHeight}</label>
+            <label className="text-xs text-gray-500">Line Height: {customization.lineHeight}</label>
             <input
               type="range"
               min="1"
@@ -217,7 +217,7 @@ export const CustomizationPanel = () => {
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 dark:text-gray-400">Paragraph Spacing: {customization.paragraphSpacing}px</label>
+            <label className="text-xs text-gray-500">Paragraph Spacing: {customization.paragraphSpacing}px</label>
             <input
               type="range"
               min="4"
@@ -232,7 +232,7 @@ export const CustomizationPanel = () => {
 
       {/* Layout */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Layout className="w-4 h-4" />
           Layout
         </div>
@@ -243,8 +243,8 @@ export const CustomizationPanel = () => {
               onClick={() => updateCustomization({ layout })}
               className={`flex-1 py-2 text-sm rounded-md border-2 transition-all ${
                 customization.layout === layout
-                  ? 'border-indigo-500 glass text-indigo-700 dark:text-indigo-400'
-                  : 'border-white/30 dark:border-white/10 glass text-gray-600 dark:text-gray-400 hover:border-white/50 dark:hover:border-white/20'
+                  ? 'border-indigo-500 glass text-indigo-700'
+                  : 'border-white/30 glass text-gray-600 hover:border-white/50'
               }`}
             >
               {layout === 'single' ? 'Single Column' : 'Two Column'}
@@ -255,7 +255,7 @@ export const CustomizationPanel = () => {
 
       {/* Accent Style */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           Accent Style
         </div>
         <div className="grid grid-cols-2 gap-2">
@@ -265,8 +265,8 @@ export const CustomizationPanel = () => {
               onClick={() => updateCustomization({ accentStyle: style })}
               className={`py-2 text-xs rounded-md border-2 transition-all capitalize ${
                 customization.accentStyle === style
-                  ? 'border-indigo-500 glass text-indigo-700 dark:text-indigo-400'
-                  : 'border-white/30 dark:border-white/10 glass text-gray-600 dark:text-gray-400 hover:border-white/50 dark:hover:border-white/20'
+                  ? 'border-indigo-500 glass text-indigo-700'
+                  : 'border-white/30 glass text-gray-600 hover:border-white/50'
               }`}
             >
               {style}
@@ -277,7 +277,7 @@ export const CustomizationPanel = () => {
 
       {/* Skills Proficiency Display */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
           <Type className="w-4 h-4" />
           Skills Display
         </div>
@@ -288,34 +288,14 @@ export const CustomizationPanel = () => {
               onClick={() => updateCustomization({ proficiencyDisplay: mode })}
               className={`flex-1 py-2 text-sm rounded-md border-2 capitalize transition-all ${
                 customization.proficiencyDisplay === mode
-                  ? 'border-indigo-500 glass text-indigo-700 dark:text-indigo-400'
-                  : 'border-white/30 dark:border-white/10 glass text-gray-600 dark:text-gray-400 hover:border-white/50 dark:hover:border-white/20'
+                  ? 'border-indigo-500 glass text-indigo-700'
+                  : 'border-white/30 glass text-gray-600 hover:border-white/50'
               }`}
             >
               {mode}
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Theme Toggle */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-          {customization.theme === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          Theme
-        </div>
-        <button
-          onClick={() =>
-            updateCustomization({ theme: customization.theme === 'light' ? 'dark' : 'light' })
-          }
-          className={`w-full py-2 text-sm rounded-md border-2 transition-all ${
-            customization.theme === 'dark'
-              ? 'border-indigo-500 glass text-indigo-400'
-              : 'border-white/30 glass text-gray-600 hover:border-white/50'
-          }`}
-        >
-          {customization.theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-        </button>
       </div>
     </div>
   );
@@ -331,18 +311,18 @@ const ColorPicker = ({
   onChange: (v: string) => void;
 }) => (
   <div className="flex items-center gap-3">
-    <label className="text-sm text-gray-600 dark:text-gray-400 w-20">{label}</label>
+    <label className="text-sm text-gray-600 w-20">{label}</label>
     <input
       type="color"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-8 h-8 rounded-md border border-white/30 dark:border-white/10 cursor-pointer"
+      className="w-8 h-8 rounded-md border border-white/30 cursor-pointer"
     />
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="flex-1 px-3 py-2 glass-input rounded-md text-sm font-mono text-gray-900 dark:text-white"
+      className="flex-1 px-3 py-2 glass-input rounded-md text-sm font-mono text-gray-900"
     />
   </div>
 );

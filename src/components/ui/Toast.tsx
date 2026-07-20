@@ -45,10 +45,10 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const bgColor = {
-    success: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800',
-    error: 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800',
-    warning: 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800',
-    info: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800',
+    success: 'bg-green-50 border-green-200',
+    error: 'bg-red-50 border-red-200',
+    warning: 'bg-amber-50 border-amber-200',
+    info: 'bg-blue-50 border-blue-200',
   };
 
   return (
@@ -61,10 +61,10 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
             className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border shadow-lg ${bgColor[toast.type]}`}
           >
             {icons[toast.type]}
-            <span className="text-sm text-gray-800 dark:text-gray-200">{toast.message}</span>
+            <span className="text-sm text-gray-800">{toast.message}</span>
             <button
               onClick={() => removeToast(toast.id)}
-              className="ml-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="ml-auto text-gray-400 hover:text-gray-600"
             >
               <X className="w-3.5 h-3.5" />
             </button>

@@ -1,51 +1,76 @@
 import { useRef, useEffect, useState } from 'react';
 
 const A4_RATIO = 297 / 210;
+const MAX_WIDTH = 800;
 
 interface PageBreakPreviewProps {
   children: React.ReactNode;
+  contentId?: string;
 }
 
-const PageBreakPreview = ({ children }: PageBreakPreviewProps) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [breaks, setBreaks] = useState<number[]>([]);
+const PageBreakPreview = ({ children, contentId }: PageBreakPreviewProps) => {
+  const sizerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [pageWidth, setPageWidth] = useState(0);
+  const [pageHeight, setPageHeight] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
+    const sizer = sizerRef.current;
+    if (!sizer) return;
     const measure = () => {
-      const w = el.offsetWidth;
-      if (!w) return;
-      const pageH = w * A4_RATIO;
-      const contentH = el.scrollHeight;
-      const count = Math.max(1, Math.ceil(contentH / pageH));
-      const pts: number[] = [];
-      for (let i = 1; i < count; i++) {
-        pts.push(i * pageH);
+      const avail = sizer.offsetWidth;
+      if (!avail) return;
+      const w = Math.min(avail, MAX_WIDTH);
+      setPageWidth(w);
+      const el = measureRef.current;
+      if (el) {
+        const pageH = w * A4_RATIO;
+        const contentH = el.scrollHeight;
+        setPageHeight(pageH);
+        setPageCount(Math.max(1, Math.ceil(contentH / pageH)));
       }
-      setBreaks(pts);
     };
     measure();
     const observer = new ResizeObserver(measure);
-    observer.observe(el);
+    observer.observe(sizer);
+    if (measureRef.current) observer.observe(measureRef.current);
     return () => observer.disconnect();
-  }, [children]);
+  }, [children, pageWidth]);
 
   return (
-    <div className="relative">
-      <div ref={contentRef} className="relative">
+    <div className="relative w-full">
+      <div ref={sizerRef} className="w-full h-0 overflow-hidden pointer-events-none" aria-hidden />
+
+      <div
+        ref={measureRef}
+        id={contentId}
+        className="pointer-events-none"
+        style={{ position: 'absolute', top: 0, left: '-99999px', width: pageWidth || undefined }}
+        aria-hidden
+      >
         {children}
-        {breaks.map((y, i) => (
-          <div
-            key={i}
-            className="absolute left-0 right-0 flex items-center gap-3 pointer-events-none"
-            style={{ top: y - 1 }}
-          >
-            <span className="flex-1 h-px border-t border-dashed border-red-300 dark:border-red-500/50" />
-            <span className="text-[10px] font-medium text-red-400 dark:text-red-500/70 whitespace-nowrap shrink-0">
-              Page {i + 2}
-            </span>
-            <span className="flex-1 h-px border-t border-dashed border-red-300 dark:border-red-500/50" />
+      </div>
+
+      <div className="flex flex-col items-center gap-6">
+        {Array.from({ length: pageCount }).map((_, i) => (
+          <div key={i} className="relative" style={{ width: pageWidth || undefined }}>
+            <div
+              className="relative overflow-hidden bg-white shadow-lg ring-1 ring-black/5"
+              style={{ width: pageWidth || undefined, height: pageHeight || undefined }}
+            >
+              <div
+                className="absolute top-0 left-0"
+                style={{ width: pageWidth || undefined, transform: `translateY(-${i * pageHeight}px)` }}
+              >
+                {children}
+              </div>
+            </div>
+            {pageCount > 1 && (
+              <span className="absolute -bottom-5 right-0 text-[10px] font-medium text-gray-400">
+                Page {i + 1} of {pageCount}
+              </span>
+            )}
           </div>
         ))}
       </div>

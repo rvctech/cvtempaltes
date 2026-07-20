@@ -88,10 +88,10 @@ export const ATSScoreChecker = () => {
   const percentage = Math.round((totalScore / maxTotal) * 100);
 
   const getGrade = () => {
-    if (percentage >= 80) return { grade: 'A', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/40' };
-    if (percentage >= 60) return { grade: 'B', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/40' };
-    if (percentage >= 40) return { grade: 'C', color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-100 dark:bg-yellow-900/40' };
-    return { grade: 'D', color: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/40' };
+    if (percentage >= 80) return { grade: 'A', color: 'text-green-600', bg: 'bg-green-100' };
+    if (percentage >= 60) return { grade: 'B', color: 'text-blue-600', bg: 'bg-blue-100' };
+    if (percentage >= 40) return { grade: 'C', color: 'text-yellow-600', bg: 'bg-yellow-100' };
+    return { grade: 'D', color: 'text-red-600', bg: 'bg-red-100' };
   };
 
   const gradeInfo = getGrade();
@@ -100,7 +100,7 @@ export const ATSScoreChecker = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100 transition-colors"
       >
         ATS {percentage}%
       </button>
@@ -108,40 +108,40 @@ export const ATSScoreChecker = () => {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-1.5 w-80 z-50 bg-white dark:bg-[#1a2332] border border-gray-200 dark:border-gray-700/60 rounded-xl shadow-lg overflow-hidden">
-            <div className="p-4 border-b border-gray-100 dark:border-gray-700/30">
+          <div className="absolute right-0 top-full mt-1.5 w-80 z-50 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+            <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">ATS Score</h3>
+                <h3 className="text-sm font-semibold text-gray-900">ATS Score</h3>
                 <span className={`text-lg font-bold px-2 py-0.5 rounded-md ${gradeInfo.color} ${gradeInfo.bg}`}>
                   {gradeInfo.grade}
                 </span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
                 <div
                   className="bg-indigo-500 h-1.5 rounded-full transition-all"
                   style={{ width: `${percentage}%` }}
                 />
               </div>
-              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">{totalScore}/{maxTotal} pts</p>
+              <p className="text-[11px] text-gray-400 mt-1">{totalScore}/{maxTotal} pts</p>
             </div>
             <div className="p-4 max-h-72 overflow-y-auto space-y-3">
               {results.map((result) => (
                 <div key={result.category} className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{result.category}</span>
-                    <span className="text-[11px] text-gray-400 dark:text-gray-500">{result.score}/{result.maxScore}</span>
+                    <span className="text-xs font-medium text-gray-700">{result.category}</span>
+                    <span className="text-[11px] text-gray-400">{result.score}/{result.maxScore}</span>
                   </div>
                   {result.tips.length > 0 ? (
                     <div className="space-y-0.5">
                       {result.tips.map((tip, i) => (
-                        <div key={i} className="flex items-start gap-1.5 text-[11px] text-gray-500 dark:text-gray-400">
+                        <div key={i} className="flex items-start gap-1.5 text-[11px] text-gray-500">
                           <AlertCircle className="w-2.5 h-2.5 mt-0.5 text-amber-500 shrink-0" />
                           {tip}
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400">
+                    <div className="flex items-center gap-1.5 text-[11px] text-green-600">
                       <CheckCircle className="w-2.5 h-2.5" />
                       Good
                     </div>
@@ -149,10 +149,10 @@ export const ATSScoreChecker = () => {
                 </div>
               ))}
             </div>
-            <div className="p-3 border-t border-gray-100 dark:border-gray-700/30">
+            <div className="p-3 border-t border-gray-100">
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-full py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
+                className="w-full py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100 transition-colors"
               >
                 Close
               </button>
